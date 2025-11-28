@@ -1,0 +1,117 @@
+.container-fluid {
+    background-color: #24d06b;
+    color: white;
+    /* for good contrast */
+}
+
+/* General Reset and Typography (Keep existing styles from previous response) */
+
+.main {
+    font-family: 'Poppins', sans-serif;
+    background-color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px 0;
+    /* Add padding top/bottom */
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Modal/Vote Box Styling */
+.mrnacos-container {
+    width: 90%;
+    max-width: 500px;
+    box-sizing: border-box;
+}
+
+.vote-box {
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 25px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.title {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #333;
+    margin: 15px 0 25px 0;
+    text-align: left;
+}
+
+/* --- Admin Panel Specific Styles --- */
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.admin-panel label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9em;
+}
+
+.admin-panel input[type="text"],
+.admin-panel textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 1em;
+}
+
+.admin-panel textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.btn-generate {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    background-color: #4CAF50;
+    /* Green for Admin action */
+    color: white;
+    font-size: 1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-generate:hover {
+    background-color: #45a049;
+}
+
+/* --- Vote Display Styles (from previous response, ensure they are present) --- */
+
+/* Header/Category Details */
+.header-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* ... (Include all previous styles for .category-name, .price-tag, .option, .vote-count, .btn-vote, etc.) ... */
+/* NOTE: For brevity, the full existing voting form CSS is omitted here, but should be included in your `styles.css` file. */
+
+.placeholder-text {
+    color: #888;
+    font-style: italic;
+    padding: 50px 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* You must include the full styles for .option, .vote-count, .winning-tag, etc. from the previous answer for the voting form to display correctly. */

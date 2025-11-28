@@ -1,0 +1,325 @@
+/* General Reset and Typography */
+.main {
+    font-family: 'Poppins', sans-serif;
+    /* Simulate the gray background of the main app */
+    background-color: #e0e0e0; 
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Start from the top */
+    padding-top: 50px;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Modal/Vote Box Styling (to match the pop-up look) */
+.mrnacos-container {
+    width: 90%;
+    max-width: 450px;
+    box-sizing: border-box;
+}
+
+.vote-box {
+    background-color: #ffffff;
+    border-radius: 15px; /* Subtle rounding */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+    padding: 25px;
+    text-align: center;
+}
+
+/* Header/Category Details */
+.header-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.category-name {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #555;
+    margin: 0;
+    text-align: left;
+}
+
+.price-tag {
+    background-color: #ffcc00; /* Yellow accent */
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 700;
+    font-size: 0.9em;
+}
+
+.title {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #333; 
+    margin: 15px 0 25px 0;
+    text-align: left;
+}
+
+/* Candidate List and Options */
+.candidate-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+/* WINNING Tag Styling */
+.winning-tag {
+    position: absolute;
+    top: -10px;
+    left: 0;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    font-size: 0.75em;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 5px;
+    z-index: 10;
+}
+
+/* Hide default radio button */
+.option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.option label {
+    flex-grow: 1;
+    text-align: left;
+    font-weight: 600;
+    color: #444;
+    padding-left: 35px; 
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    line-height: 1.2;
+}
+
+/* Custom Radio Button Circle and Checkmark */
+.option label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #aaa;
+    background-color: #fff;
+    transition: border-color 0.2s;
+}
+
+.option label::after {
+    content: '✔'; /* Unicode checkmark */
+    position: absolute;
+    left: 1px;
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    font-size: 14px;
+    color: white;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* State when Radio Button is Checked (Mimicking the Blue Check/Outline) */
+.option input[type="radio"]:checked + label::before {
+    border-color: #007bff; /* Blue checked outline */
+    background-color: #007bff;
+}
+
+.option input[type="radio"]:checked + label::after {
+    transform: translateY(-50%) scale(1);
+}
+
+.option input[type="radio"]:checked + label {
+    color: #333;
+}
+
+/* Styling for the Selected Option Box (Blue Outline) */
+.option input[type="radio"]:checked ~ label + .vote-count {
+     /* This selects the vote-count span when the radio is checked */
+    color: #007bff; 
+}
+
+.option input[type="radio"]:checked {
+    /* Apply border style to the parent .option when selected */
+    border: 2px solid #007bff;
+    background-color: #e6f0ff; 
+}
+
+
+/* Vote Count Styling (Right Aligned) */
+.vote-count {
+    font-weight: 700;
+    color: #777;
+    font-size: 1em;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
+/* Vote Button */
+.btn-vote {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #24d06b; /* Primary blue button color */
+    color: white;
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-transform: uppercase;
+}
+
+.btn-vote:hover {
+    background-color: #1bb55a;
+}
+/* Container for the vote quantity selector */
+.vote-quantity-selector {
+    padding: 20px;
+    background-color: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.vote-label {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.vote-label label {
+    font-size: 1.25rem; /* Equivalent to fs-4 */
+    color: #333;
+}
+
+/* Base Grid Layout for Options */
+.vote-options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Vertical space between rows */
+}
+
+.vot-row {
+    display: grid;
+    /* Default for desktop: 10 columns for small numbers, 5 for large */
+    gap: 10px;
+}
+
+/* Small Vote Numbers (1-10) - 10 columns on large screens */
+.vot-row-small {
+    grid-template-columns: repeat(10, 1fr);
+}
+
+/* Large Vote Numbers (20-100) - 5 columns on large screens for bigger spacing */
+.vot-row-large {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+/* Styling for the hidden radio buttons and the visible labels */
+.vot-row input[type="radio"] {
+    position: absolute;
+    opacity: 0; /* Hide the actual radio button */
+    width: 0;
+    height: 0;
+}
+
+/* Style the label (which acts as the visible button) */
+.num_vote {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+/* Hover effect */
+.num_vote:hover {
+    background-color: #eee;
+    border-color: #aaa;
+}
+
+/* Checked state: Select the label when its associated radio is checked */
+.vot-row input[type="radio"]:checked + .num_vote {
+    background-color: #24d06b; /* Blue selection color */
+    border-color: #24d06b;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+}
+
+/* Custom Button Styling */
+.custom-btn {
+    background-color: #f0f0f0;
+    color: #555;
+    border: 1px dashed #aaa;
+}
+
+.custom-btn:hover {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+/* Summary Text */
+.summary-text {
+    margin-top: 15px;
+    text-align: right;
+    font-size: 1.1em;
+    color: #555;
+}
+
+/* --- Mobile View Responsiveness (Phone View) --- */
+@media (max-width: 600px) {
+    
+    .vote-quantity-selector {
+        padding: 15px;
+    }
+    
+    /* Small Vote Numbers (1-10) on phone: 5 columns per row */
+    .vot-row-small {
+        grid-template-columns: repeat(5, 1fr); 
+    }
+    
+    /* Large Vote Numbers (20-100) on phone: 3 columns per row */
+    .vot-row-large {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* Adjust padding for better tap targets on small screens */
+    .num_vote {
+        padding: 12px 0;
+        font-size: 0.9rem;
+    }
+    
+    /* Ensure the custom button fits well in the 3-column layout */
+    .vot-row-large .custom-btn {
+        grid-column: span 1; /* Make it occupy 1 column */
+    }
+}

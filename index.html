@@ -4,87 +4,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="css/loginsignin2.css">
-    <title>Document</title>
+    <title>NACOS Categories</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/vote.css">
+    <style>
+        /* Navbar container */
+/* Buttons styling similar to your previous Bootstrap style */
+
+.btn {
+  padding: 8px 15px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Logout button */
+.logout-btn {
+  background-color: #dc3545; /* red */
+  color: white;
+  float: right; /* float to the right */
+  display: none; /* hidden by default */
+}
+
+/* Add Category button */
+.add-btn {
+  background-color: #0d6efd; /* blue */
+  color: white;
+  width: 100%; /* full width */
+  margin-top: 15px;
+}
+
+    </style>
+
 </head>
 
 <body>
     <div class="container">
-        <div class="form-box login">
-            <form action="">
-                <h1>Login</h1>
-                <div class="input-box">
-                    <input type="text" placeholder="Username" required>
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="input-box">
-                    <input type="password" placeholder="Password" required>
-                    <i class="fas fa-lock"></i>
-                </div>
-                <div class="forgot-link">
-                    <a href="#">Forgot password</a>
-                </div>
-                <button type="submit" class="btn">Login</button>
-                <p>or login with social platform</p>
-                <div class="social-icon">
-                    <a href="#"> <i class="fab fa-google"></i></a>
-                    <a href="#"> <i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-github-square"></i></a>
-                    <a href="#"> <i class="fab fa-linkedin-in"></i></a>
-                </div>
-            </form>
+    <nav class="navbar">
+    <div class="nav-container">
+        <div class="brand">
+            <img src="./images/nacos1.png" alt="NACOS Logo" width="50" height="50">
+            <span>Nigeria Association of Computing Students</span>
         </div>
 
+        <!-- LOGOUT BUTTON -->
+        <button id="logoutBtn" class="logout-btn">
+            Logout <span class="icon">⎋</span>
+        </button>
+    </div>
+</nav>
 
-        <div class="form-box register">
-            <form action="">
-                <h1>Registration</h1>
-                <div class="input-box">
-                    <input type="text" placeholder="Username" required>
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="input-box">
-                    <input type="email" placeholder="Email" required>
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <div class="input-box">
-                    <input type="password" placeholder="Password" required>
-                    <i class="fas fa-lock"></i>
-                </div>
-                <button type="submit" class="btn">Register</button>
-                <p>or register with social platform</p>
-                <div class="social-icon">
-                    <a href="#"> <i class="fab fa-google"></i></a>
-                    <a href="#"> <i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-github-square"></i></a>
-                    <a href="#"> <i class="fab fa-linkedin-in"></i></a>
-                </div>
-            </form>
-        </div>
 
-        <div class="toggle-box">
-            <div class="toggle-panel toggle-left">
-                <div class="logo">
-                    <img src="images/aau.jpg" alt="">
-                    <img src="./images/nacos1.png" alt="">
+
+        <div class="container mt-5 w-75">
+            <h2 class="mb-4 text-center fw-bold">NACOS AWARD CATEGORIES</h2>
+            <section>
+                <div id="category-list" class="list-group">
+                    <!-- Categories will be dynamically inserted here -->
                 </div>
-                <h1>Hello, Welcome</h1>
-                <p>Don't have an account?</p>
-                <button class="btn register-btn">Register</button>
-            </div>
-            <div class="toggle-panel toggle-right">
-                <div class="logo">
-                    <img src="images/aau.jpg" alt="">
-                    <img src="./images/nacos1.png" alt="">
-                </div>
-                <h1>Welcome Back</h1>
-                <p>Already have an account?</p>
-                <button class="btn login-btn">Login</button>
-            </div>
+                <button id="add-category-btn" class="btn fw-bold w-100 mt-3">Add Categories</button>
+            </section>
         </div>
     </div>
-    <script src="js/loginsinup.js"></script>
-</body>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const categoryList = document.getElementById("category-list");
+  const addCategoryBtn = document.getElementById("add-category-btn");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  // canonical key
+  const AUTH_KEY = "adminToken";
+
+  // Helper to read token fresh (don't cache in a const)
+  function isAdminLoggedIn() {
+    const t = localStorage.getItem(AUTH_KEY);
+    // optional: basic sanity check (token is non-empty string)
+    return typeof t === "string" && t.trim().length > 0;
+  }
+
+  // Update visibility based on current auth state
+  function updateAuthUI() {
+    const loggedIn = isAdminLoggedIn();
+    if (addCategoryBtn) addCategoryBtn.style.display = loggedIn ? "block" : "none";
+    if (logoutBtn) logoutBtn.style.display = loggedIn ? "flex" : "none";
+  }
+
+  // initial update
+  updateAuthUI();
+
+  // If admin clicks add category
+  if (addCategoryBtn) {
+    addCategoryBtn.addEventListener("click", () => {
+      // keep the same redirection you used earlier
+      window.location.href = "admin_poll.html";
+    });
+  }
+
+  // Logout handler (remove token and update UI)
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem(AUTH_KEY);
+      updateAuthUI();             // hide buttons immediately
+      alert("Logged out successfully.");
+      // redirect to homepage (your flow)
+      window.location.href = "index.html";
+    });
+  }
+
+  // Listen for storage events so other tabs update UI when token changes
+  window.addEventListener("storage", (ev) => {
+    if (ev.key === AUTH_KEY) updateAuthUI();
+  });
+
+  // Fetch categories (your existing code)
+  async function fetchCategories() {
+    try {
+      const res = await fetch("https://voting-app-api-c5x9.onrender.com/admin/category");
+      const data = await res.json();
+      categoryList.innerHTML = "";
+      (data.categories || []).forEach(cat => {
+        const a = document.createElement("a");
+        a.href = `main_vote.html?categoryId=${cat._id}&categoryName=${encodeURIComponent(cat.name)}`;
+        a.className = "list-group-item list-group-item-action fw-bold";
+        a.textContent = cat.name;
+        categoryList.appendChild(a);
+      });
+    } catch (err) {
+      console.error("Failed to fetch categories:", err);
+      if (categoryList) categoryList.innerHTML = "<p class='text-danger'>Failed to load categories</p>";
+    }
+  }
+
+  // initial fetch
+  if (categoryList) fetchCategories();
+});
+</script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

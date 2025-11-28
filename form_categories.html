@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Poll Generator</title>
+  <link rel="stylesheet" href="css/vote.css">
+  <link rel="stylesheet" href="css/from_categories.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Custom buttons for logout and home */
+    .top-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .top-buttons button {
+      padding: 8px 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .btn-logout {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .btn-logout:hover {
+      background-color: #c0392b;
+    }
+
+    .btn-home {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .btn-home:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="container-fluid">
+      <img src="./images/nacos1.png" alt="" width="50" height="50" class="d-inline-block align-text-center">
+      <span class="navbar-brand mb-0 h1 text-white">Nigeria Association of Computing Students</span>
+    </div>
+  </nav>
+
+  <!-- Top buttons -->
+  <div class="top-buttons">
+    <button id="homeBtn" class="btn-home">Back to Home</button>
+    <button id="logoutBtn" class="btn-logout">Logout</button>
+  </div>
+
+  <div class="main">
+    <div class="mrnacos-container">
+      <div class="admin-panel vote-box">
+        <h2 class="title">ADMIN: CREATE NEW POLL</h2>
+        <form id="adminForm">
+          <div class="input-group">
+            <label for="categoryName">Category Name:</label>
+            <input type="text" id="categoryName" placeholder="Select or type category" required>
+          </div>
+
+          <label>Candidates (Name|Affiliation, one per line):</label>
+          <textarea id="candidates" rows="5" required></textarea>
+
+          <button type="submit" class="btn-generate">Generate Voting Form</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const adminForm = document.getElementById("adminForm");
+      const categoryInput = document.getElementById("categoryName");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const homeBtn = document.getElementById("homeBtn");
+
+      // --- Check if admin is logged in ---
+      const token = localStorage.getItem("adminToken");
+      if (!token) {
+        alert("You must be logged in as an admin to access this page.");
+        window.location.href = "index.html"; // redirect to login
+        return;
+      }
+
+      // --- Logout logic ---
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("adminToken");
+        alert("Logged out successfully.");
+        window.location.href = "index.html";
+      });
+
+      // --- Back to home button ---
+      homeBtn.addEventListener("click", () => {
+        window.location.href = "index.html";
+      });
+
+      // --- Populate category datalist ---
+      async function populateCategories() {
+        try {
+          const res = await fetch("https://voting-app-api-c5x9.onrender.com/admin/category", {
+            headers: { "Authorization": `Bearer ${token}` }
+          });
+          const data = await res.json();
+
+          let datalist = document.getElementById("categories-list");
+          if (!datalist) {
+            datalist = document.createElement("datalist");
+            datalist.id = "categories-list";
+            document.body.appendChild(datalist);
+          }
+          datalist.innerHTML = "";
+
+          (data.categories || []).forEach(cat => {
+            const option = document.createElement("option");
+            option.value = cat.name;
+            datalist.appendChild(option);
+          });
+
+          categoryInput.setAttribute("list", "categories-list");
+
+        } catch (err) {
+          console.error("Failed to load categories:", err);
+        }
+      }
+
+      populateCategories();
+
+      // --- Form submission ---
+      adminForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const categoryName = categoryInput.value.trim();
+        const candidatesRaw = document.getElementById("candidates").value.trim();
+
+        if (!categoryName) return alert("Category name is required");
+        if (!candidatesRaw) return alert("Enter at least one candidate");
+
+        const candidates = candidatesRaw.split("\n").map(s => s.trim()).filter(Boolean);
+
+        try {
+          // 1. Create or get category
+          let categoryId;
+          const createRes = await fetch("https://voting-app-api-c5x9.onrender.com/admin/category", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ name: categoryName })
+          });
+
+          const createData = await createRes.json();
+
+          if (createRes.ok) {
+            categoryId = createData.category._id || createData.category.id || createData.category;
+          } else {
+            // If exists, find it
+            if ((createData.msg || "").toLowerCase().includes("already exists")) {
+              const listRes = await fetch("https://voting-app-api-c5x9.onrender.com/admin/category", {
+                headers: { "Authorization": `Bearer ${token}` }
+              });
+              const listData = await listRes.json();
+              const found = (listData.categories || []).find(c => c.name.toLowerCase() === categoryName.toLowerCase());
+              if (!found) throw new Error("Category exists but couldn't find its ID.");
+              categoryId = found._id;
+            } else {
+              throw new Error(createData.msg || createData.error || "Failed to create category");
+            }
+          }
+
+          // 2. Add nominees
+          for (const name of candidates) {
+            const addRes = await fetch("https://voting-app-api-c5x9.onrender.com/admin/category/nominee", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+              },
+              body: JSON.stringify({ categoryId, nomineeName: name })
+            });
+            const addData = await addRes.json();
+            if (!addRes.ok) console.warn("Failed to add nominee:", name, addData);
+          }
+
+          alert("Category and nominees processed.");
+          window.location.href = "index.html"; // redirect after success
+
+        } catch (err) {
+          console.error(err);
+          alert("Something went wrong: " + (err.message || err));
+        }
+      });
+
+    });
+  </script>
+</body>
+
+</html>
