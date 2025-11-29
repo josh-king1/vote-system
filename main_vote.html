@@ -191,12 +191,12 @@ if (token) {
                 const input = document.createElement("input");
                 input.type = "radio";
                 input.name = "vote_qty";
-                input.id = qty${i};
+                input.id = `qty${i}`;
                 input.value = i;
                 if (i === 1) input.checked = true;
 
                 const label = document.createElement("label");
-                label.htmlFor = qty${i};
+                label.htmlFor = `qty${i}`;
                 label.className = "num_vote";
                 label.textContent = i;
 
@@ -214,11 +214,11 @@ if (token) {
                 const input = document.createElement("input");
                 input.type = "radio";
                 input.name = "vote_qty";
-                input.id = qty${val};
+                input.id = `qty${val}`;
                 input.value = val;
 
                 const label = document.createElement("label");
-                label.htmlFor = qty${val};
+                label.htmlFor = `qty${val}`;
                 label.className = "num_vote";
                 label.textContent = val;
 
@@ -244,7 +244,7 @@ if (token) {
                 }
 
                 try {
-                    const res = await fetch(https://voting-app-api-c5x9.onrender.com/api/nominees/${categoryId});
+                    const res = await fetch(`https://voting-app-api-c5x9.onrender.com/api/nominees/${categoryId}`);
                     const data = await res.json();
 
                     if (!data.nominees || data.nominees.length === 0) {
@@ -292,7 +292,7 @@ if (token) {
                 if (!nominee) return alert("Please select a nominee.");
 
                 document.getElementById("summaryVotes").textContent =
-                    ${selectedQty} vote${selectedQty > 1 ? "s" : ""};
+                    `${selectedQty} vote${selectedQty > 1 ? "s" : ""}`;
 
                 const modal = new bootstrap.Modal(document.getElementById("paymentModal"));
                 modal.show();
